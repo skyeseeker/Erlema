@@ -10,6 +10,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
+// my add code for mock
+const express = require('express')
+const app = express()
+var appData = require('../data.json')
+var seller = appData.seller
+var goods = appData.goods
+var ratings = appData.ratings
+var apiRoutes = express.Router()
+app.use('./api', apiRoutes)
+
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
@@ -42,6 +52,30 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
+    },
+    // my add code
+    before (app) {
+      // eslint-disable-next-line no-unused-expressions
+      app.get('/api/seller', (_req, res) => {
+        res.json({
+          errno: 0,
+          data: seller
+        })
+      }),
+
+      app.get('/api/goods', (_req, res) => {
+        res.json({
+          errno: 0,
+          data: goods
+        })
+      }),
+
+      app.get('/api/ratings', (_req, res) => {
+        res.json({
+          errno: 0,
+          data: ratings
+        })
+      })
     }
   },
   plugins: [
@@ -85,8 +119,8 @@ module.exports = new Promise((resolve, reject) => {
           messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
         },
         onErrors: config.dev.notifyOnErrors
-        ? utils.createNotifierCallback()
-        : undefined
+          ? utils.createNotifierCallback()
+          : undefined
       }))
 
       resolve(devWebpackConfig)
