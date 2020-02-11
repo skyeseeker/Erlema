@@ -1,58 +1,78 @@
 <template>
-  <div class="header">
-    <div class="content-wrapper">
-      <div class="avatar">
-        <img class="avatar-img" :src="seller.avatar" />
-      </div>
-
-      <div class="content">
-        <div class="title">
-          <span class="brand"></span>
-          {{seller.name}}
+  <div>
+    <div class="header">
+      <div class="content-wrapper">
+        <div class="avatar">
+          <img class="avatar-img" :src="seller.avatar" />
         </div>
-        <div class="desc">{{seller.description}} / {{seller.deliveryTime}}分钟送达</div>
-        <div class="support" v-if="seller.supports">
-          <span class="icon" :class="classMap[seller.supports[0].type]"></span>
-          {{seller.supports[0].description}}
-          <div class="support-exted">
-            {{seller.supports.length}}个
-            <span class="icon-keyboard_arrow_right"></span>
+
+        <div class="content">
+          <div class="title">
+            <span class="brand"></span>
+            {{seller.name}}
+          </div>
+          <div class="desc">{{seller.description}} / {{seller.deliveryTime}}分钟送达</div>
+          <div class="support" v-if="seller.supports">
+            <span class="icon" :class="classMap[seller.supports[0].type]"></span>
+            {{seller.supports[0].description}}
+            <div class="support-exted" @click="handleFloat">
+              {{seller.supports.length}}个
+              <span class="icon-keyboard_arrow_right"></span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="bulletin-wrapper">
-      <span class="bulletin-img"></span>
-      {{seller.bulletin}}
-      <span class="icon-keyboard_arrow_right"></span>
-    </div>
+      <div class="bulletin-wrapper" @click="handleFloat">
+        <span class="bulletin-img"></span>
+        {{seller.bulletin}}
+        <span class="icon-keyboard_arrow_right"></span>
+      </div>
 
-    <div class="background">
-      <img class="background-img" :src="seller.avatar" />
+      <div class="background">
+        <img class="background-img" :src="seller.avatar" />
+      </div>
     </div>
+    <fade-animation>
+      <header-float :seller="seller" :classMap="classMap" v-show="showFloat" @close="handleClose"></header-float>
+    </fade-animation>
   </div>
 </template>
 
 <script>
+import HeaderFloat from "./floatLayer/Float";
+import FadeAnimation from "../fade/FadeAnimation";
 export default {
   name: "MyHeader",
   data() {
     return {
+      showFloat: false,
       classMap: ["decrease", "discount", "special", "invoice", "guarantee"]
     };
   },
   props: { seller: Object },
-  components: {}
+  methods: {
+    handleFloat() {
+      this.showFloat = true;
+    },
+    handleClose() {
+      this.showFloat = false;
+    }
+  },
+  components: {
+    HeaderFloat,
+    FadeAnimation
+  }
 };
 </script>
 
 <style lang='stylus' scoped>
 .header {
   position: relative;
+  overflow: hidden;
   width: 100%;
-  height: 0;
-  padding-bottom: 36%;
+  // height: 0;
+  // padding-bottom: 36%;
   color: #fff;
   background: rgba(7, 17, 27, 0.5);
 
@@ -86,7 +106,7 @@ export default {
           width: 0.64rem;
           height: 0.36rem;
           background-image: url('~img/brand@2x.png');
-          background-size: 0.64rem 0.36rem;
+          background-size: 100%;
           background-repeat: no-repeat;
         }
       }
@@ -154,53 +174,54 @@ export default {
       }
     }
   }
-}
 
-.bulletin-wrapper {
-  position: relative;
-  height: 0.6rem;
-  line-height: 0.6rem;
-  font-size: 0.2rem;
-  font-weight: 100;
-  padding-left: 0.2rem;
-  padding-right: 0.32rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  background-color: rgba(7, 17, 27, 0.2);
+  .bulletin-wrapper {
+    position: relative;
+    height: 0.6rem;
+    line-height: 0.6rem;
+    font-size: 0.2rem;
+    font-weight: 100;
+    padding-left: 0.2rem;
+    padding-right: 0.32rem;
+    letter-spacing: 0.02rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: rgba(7, 17, 27, 0.2);
 
-  .bulletin-img {
-    display: inline-block;
-    vertical-align: middle;
-    width: 0.5rem;
-    height: 0.28rem;
-    background-image: url('~img/bulletin@2x.png');
-    background-size: 0.5rem 0.28rem;
-    background-repeat: no-repeat;
+    .bulletin-img {
+      display: inline-block;
+      vertical-align: middle;
+      width: 0.5rem;
+      height: 0.28rem;
+      background-image: url('~img/bulletin@2x.png');
+      background-size: 0.5rem 0.28rem;
+      background-repeat: no-repeat;
+    }
+
+    .icon-keyboard_arrow_right {
+      position: absolute;
+      top: 0.16rem;
+      right: 0.06rem;
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 0.3rem;
+    }
   }
 
-  .icon-keyboard_arrow_right {
+  .background {
     position: absolute;
-    top: 0.16rem;
-    right: 0.06rem;
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 0.3rem;
-  }
-}
-
-.background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  filter: blur(10px);
-
-  .background-img {
+    top: 0;
+    left: 0;
+    z-index: -1;
     width: 100%;
     height: 100%;
+    filter: blur(10px);
+
+    .background-img {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 </style>
