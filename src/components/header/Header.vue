@@ -11,9 +11,12 @@
             <span class="brand"></span>
             {{seller.name}}
           </div>
+
           <div class="desc">{{seller.description}} / {{seller.deliveryTime}}分钟送达</div>
+
           <div class="support" v-if="seller.supports">
             <span class="icon" :class="classMap[seller.supports[0].type]"></span>
+
             {{seller.supports[0].description}}
             <div class="support-exted" @click="handleFloat">
               {{seller.supports.length}}个
@@ -33,6 +36,7 @@
         <img class="background-img" :src="seller.avatar" />
       </div>
     </div>
+
     <fade-animation>
       <header-float :seller="seller" :classMap="classMap" v-show="showFloat" @close="handleClose"></header-float>
     </fade-animation>
@@ -40,24 +44,42 @@
 </template>
 
 <script>
+import axios from "axios";
 import HeaderFloat from "./floatLayer/Float";
-import FadeAnimation from "../fade/FadeAnimation";
+import FadeAnimation from "../common/fade/FadeAnimation";
 export default {
   name: "MyHeader",
   data() {
     return {
       showFloat: false,
-      classMap: ["decrease", "discount", "special", "invoice", "guarantee"]
+      classMap: ["decrease", "discount", "special", "invoice", "guarantee"],
+      seller: {}
     };
   },
-  props: { seller: Object },
   methods: {
+    getSellerData() {
+      axios
+        .get("/api/seller")
+        .then(this.getSellerDataSucc)
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    getSellerDataSucc(res) {
+      const data = res.data;
+      if (data.errno == 0 && data.data) {
+        this.seller = data.data;
+      }
+    },
     handleFloat() {
       this.showFloat = true;
     },
     handleClose() {
       this.showFloat = false;
     }
+  },
+  created() {
+    this.getSellerData();
   },
   components: {
     HeaderFloat,
@@ -67,18 +89,18 @@ export default {
 </script>
 
 <style lang='stylus' scoped>
+@import '~style/mystyle.styl';
+
 .header {
   position: relative;
   overflow: hidden;
   width: 100%;
-  // height: 0;
-  // padding-bottom: 36%;
   color: #fff;
   background: rgba(7, 17, 27, 0.5);
 
   .content-wrapper {
     display: flex;
-    padding: 0.44rem 0.24rem 0.24rem 0.44rem;
+    padding: 0.44rem 0 0.24rem 0.44rem;
 
     .avatar {
       width: 20%;
@@ -92,19 +114,20 @@ export default {
     }
 
     .content {
-      margin-left: 0.2rem;
+      flex: 1;
+      margin-left: 0.24rem;
 
       .title {
-        margin: 0.02rem 0 0.18rem 0;
+        margin: 0.04rem 0 0.18rem 0;
         line-height: 0.36rem;
         font-size: 0.34rem;
         font-weight: bold;
 
         .brand {
           display: inline-block;
-          vertical-align: top;
+          vertical-align: middle;
           width: 0.64rem;
-          height: 0.36rem;
+          height: 0.4rem;
           background-image: url('~img/brand@2x.png');
           background-size: 100%;
           background-repeat: no-repeat;
@@ -118,45 +141,24 @@ export default {
       }
 
       .support {
-        position: relative;
-        margin: 0.02rem 0 0.1rem 0;
-        line-height: 0.3rem;
-        font-size: 0.27rem;
+        margin-top: 0.04rem;
+        font-size: 0.26rem;
         font-weight: 200;
 
         .icon {
           display: inline-block;
-          vertical-align: top;
+          vertical-align: middle;
           width: 0.3rem;
           height: 0.3rem;
-          background-size: 0.3rem 0.3rem;
+          background-size: 100%;
           background-repeat: no-repeat;
-
-          &.decrease {
-            background-image: url('~img/decrease_1@2x.png');
-          }
-
-          &.discount {
-            background-image: url('~img/discount_1@2x.png');
-          }
-
-          &.special {
-            background-image: url('~img/special_1@2x.png');
-          }
-
-          &.invoice {
-            background-image: url('~img/invoice_1@2x.png');
-          }
-
-          &.guarantee {
-            background-image: url('~img/guarantee_1@2x.png');
-          }
+          addDiscountClass();
         }
 
         .support-exted {
           position: absolute;
-          top: -0.1rem;
-          right: -1.4rem;
+          top: 1.4rem;
+          right: 0.2rem;
           height: 0.5rem;
           line-height: 0.5rem;
           width: 1rem;
@@ -167,8 +169,8 @@ export default {
 
           .icon-keyboard_arrow_right {
             vertical-align: middle;
-            margin-left: -0.08rem;
-            font-size: 0.26rem;
+            margin-left: -0.1rem;
+            font-size: 0.3rem;
           }
         }
       }
@@ -179,14 +181,12 @@ export default {
     position: relative;
     height: 0.6rem;
     line-height: 0.6rem;
-    font-size: 0.2rem;
+    font-size: 0.21rem;
     font-weight: 100;
     padding-left: 0.2rem;
     padding-right: 0.32rem;
     letter-spacing: 0.02rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    ellipsis();
     background-color: rgba(7, 17, 27, 0.2);
 
     .bulletin-img {
@@ -195,7 +195,7 @@ export default {
       width: 0.5rem;
       height: 0.28rem;
       background-image: url('~img/bulletin@2x.png');
-      background-size: 0.5rem 0.28rem;
+      background-size: 100%;
       background-repeat: no-repeat;
     }
 

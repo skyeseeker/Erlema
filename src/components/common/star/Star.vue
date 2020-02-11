@@ -17,9 +17,6 @@ export default {
     size: Number,
     score: Number
   },
-  data() {
-    return {};
-  },
   computed: {
     imgSize() {
       return this.size + "rem";
@@ -51,20 +48,18 @@ export default {
 .stars {
   .single-star {
     display: inline-block;
+    background-size: 100%;
 
     &.on {
       background-image: url('~img/star24_on@2x.png');
-      background-size: 100%;
     }
 
     &.half {
       background-image: url('~img/star24_half@2x.png');
-      background-size: 100%;
     }
 
     &.off {
       background-image: url('~img/star24_off@2x.png');
-      background-size: 100%;
     }
   }
 }

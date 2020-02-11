@@ -1,0 +1,29 @@
+// 文字过多，超出显示界面，多余文字则显示为省略号
+ellipsis() {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+// 给各种优惠信息动态添加class，使用不同的图片
+addDiscountClass() {
+    &.decrease {
+        background-image: url('~img/decrease_1@2x.png');
+    }
+
+    &.discount {
+        background-image: url('~img/discount_1@2x.png');
+    }
+
+    &.special {
+        background-image: url('~img/special_1@2x.png');
+    }
+
+    &.invoice {
+        background-image: url('~img/invoice_1@2x.png');
+    }
+
+    &.guarantee {
+        background-image: url('~img/guarantee_1@2x.png');
+    }
+}

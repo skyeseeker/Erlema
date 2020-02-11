@@ -3,7 +3,9 @@
     <div class="wrapper clearfix">
       <div class="content">
         <p class="name">{{seller.name}}</p>
-        <star class="star" :size="size" :score="score"></star>
+
+        <star class="star" :size="0.5" :score="seller.score"></star>
+
         <div class="title">
           <div class="line"></div>
           <div class="text">优惠信息</div>
@@ -26,6 +28,7 @@
         <div class="bulletin">{{seller.bulletin}}</div>
       </div>
     </div>
+
     <div class="close-button">
       <span class="icon-close" @click="handleClose"></span>
     </div>
@@ -33,7 +36,7 @@
 </template>
 
 <script>
-import Star from "../../star/Star";
+import Star from "../../common/star/Star";
 export default {
   name: "HeaderFloat",
   props: {
@@ -41,23 +44,22 @@ export default {
     classMap: Array
   },
   data() {
-    return {
-      size: 0.5,
-      score: 4.3
-    };
+    return {};
   },
   methods: {
     handleClose() {
       this.$emit("close");
     }
   },
-
   components: {
     Star
   }
 };
 </script>
+
 <style lang='stylus' scoped>
+@import '~style/mystyle.styl';
+
 .float {
   z-index: 100;
   position: fixed;
@@ -92,7 +94,7 @@ export default {
       .title {
         display: flex;
         width: 80%;
-        margin: 0.36rem auto 0.2rem auto;
+        margin: 0.36rem auto 0 auto;
 
         .line {
           flex: 1;
@@ -110,41 +112,22 @@ export default {
       }
 
       .discountList {
-        margin-bottom: 0.3rem;
+        margin: 0.2rem 0;
 
         .list {
-          line-height: 0.3rem;
+          line-height: 0.4rem;
           font-size: 0.3rem;
           font-weight: 200;
-          padding: 0.2rem 0 0 0.92rem;
+          padding: 0.16rem 0 0 12%;
 
           .icon {
             display: inline-block;
             vertical-align: middle;
-            width: 0.4rem;
-            height: 0.4rem;
+            width: 0.36rem;
+            height: 0.36rem;
             background-size: 100%;
             background-repeat: no-repeat;
-
-            &.decrease {
-              background-image: url('~img/decrease_1@2x.png');
-            }
-
-            &.discount {
-              background-image: url('~img/discount_1@2x.png');
-            }
-
-            &.special {
-              background-image: url('~img/special_1@2x.png');
-            }
-
-            &.invoice {
-              background-image: url('~img/invoice_1@2x.png');
-            }
-
-            &.guarantee {
-              background-image: url('~img/guarantee_1@2x.png');
-            }
+            addDiscountClass();
           }
         }
       }
