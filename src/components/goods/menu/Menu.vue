@@ -1,7 +1,13 @@
 <template>
-  <div class="menu-wrapper">
+  <div class="menu-wrapper" ref="Menuwrapper">
     <ul class="menu">
-      <li class="item-wrapper border-bottom" v-for="(item,index) in goodsData" :key="index">
+      <li
+        class="item-wrapper border-bottom"
+        v-for="(item,index) in goodsData"
+        :key="index"
+        :class="{'current':currentIndex==index}"
+        @click="selectMenu(index)"
+      >
         <div class="item-content">
           <span v-show="item.type>-1" class="item-icon" :class="classMap[item.type]"></span>
           <span class="item-text">{{item.name}}</span>
@@ -12,18 +18,30 @@
 </template>
 
 <script>
+import Bscroll from "better-scroll";
 export default {
   name: "GoodsMenu",
   data() {
     return {
-      classMap: ["decrease", "discount", "special", "invoice", "guarantee"]
+      classMap: ["decrease", "discount", "special", "invoice", "guarantee"],
+
     };
   },
   props: {
-    goodsData: Array
+    goodsData: Array,
+    currentIndex: Number
   },
-
-  components: {}
+  methods: {
+    selectMenu(index){
+      this.$emit("clickMenu", index);
+    }
+  },
+  mounted() {
+    this.menuScroll = new Bscroll(this.$refs.Menuwrapper, {
+      click: true,
+      probeType: 3
+    });
+  }
 };
 </script>
 
@@ -39,6 +57,7 @@ export default {
 .menu-wrapper {
   flex: 0 0 22%;
   width: 22%;
+  overflow: hidden;
   background: #f3f5f7;
 
   .menu {
@@ -50,14 +69,14 @@ export default {
       .item-content {
         display: table-cell;
         vertical-align: middle;
-        padding-left 10%
-        padding-right 5%
-        font-size 0
+        padding-left: 10%;
+        padding-right: 5%;
+        font-size: 0;
 
         .item-text {
           font-size: 0.26rem;
           font-weight: 200;
-          color: rgb(24, 20, 20);
+          color: rgb(7, 17, 27);
         }
 
         .item-icon {
@@ -68,6 +87,14 @@ export default {
           background-size: 100%;
           background-repeat: no-repeat;
           addDiscountClass();
+        }
+      }
+
+      &.current {
+        background: #fff;
+
+        .item-text {
+          font-weight: 700;
         }
       }
     }

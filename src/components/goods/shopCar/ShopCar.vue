@@ -1,5 +1,5 @@
 <template>
-  <div>购物车</div>
+  <div class="car"></div>
 </template>
 
 <script>
@@ -15,4 +15,7 @@ export default {
 
 </script>
 <style lang='stylus' scoped>
+.car{
+  position fixd
+}
 </style>
