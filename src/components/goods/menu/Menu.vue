@@ -5,7 +5,7 @@
         class="item-wrapper border-bottom"
         v-for="(item,index) in goodsData"
         :key="index"
-        :class="{'current':currentIndex==index}"
+        :class="{'current':currentIndex===index}"
         @click="selectMenu(index)"
       >
         <div class="item-content">
@@ -23,8 +23,7 @@ export default {
   name: "GoodsMenu",
   data() {
     return {
-      classMap: ["decrease", "discount", "special", "invoice", "guarantee"],
-
+      classMap: ["decrease", "discount", "special", "invoice", "guarantee"]
     };
   },
   props: {
@@ -32,7 +31,7 @@ export default {
     currentIndex: Number
   },
   methods: {
-    selectMenu(index){
+    selectMenu(index) {
       this.$emit("clickMenu", index);
     }
   },

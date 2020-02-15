@@ -10,6 +10,7 @@ import 'style/reset.css'
 import 'style/border.css'
 // 导入图标
 import 'style/style.css'
+// 
 import "style/base.styl";
 
 Vue.config.productionTip = false
@@ -17,6 +18,9 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  data:{
+    eventHub: new Vue()
+  },
   router,
   components: { App },
   template: '<App/>'

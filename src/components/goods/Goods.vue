@@ -1,8 +1,13 @@
 <template>
   <div class="goods">
     <goods-menu :goodsData="goodsData" :currentIndex="currentIndex" @clickMenu="changeFoods"></goods-menu>
-    <foods :goodsData="goodsData" @myIndex="showIndex" :selectedIndex="selectedIndex"></foods>
-    <!-- <shop-car></shop-car> -->
+    <foods
+      :goodsData="goodsData"
+      @myIndex="showIndex"
+      :selectedIndex="selectedIndex"
+      @deliverAddDom="handleAddDom"
+    ></foods>
+    <shop-car :selectedFoods="selectedFoods" :buttonDom="buttonDom"></shop-car>
   </div>
 </template>
 
@@ -18,12 +23,29 @@ export default {
     return {
       goodsData: [],
       currentIndex: 0,
-      selectedIndex:0
+      selectedIndex: 0,
+      buttonDom: null
     };
   },
+  computed: {
+    selectedFoods() {
+      let foods = [];
+      this.goodsData.forEach(good => {
+        good.foods.forEach(food => {
+          if (food.count) {
+            foods.push(food);
+          }
+        });
+      });
+      return foods;
+    }
+  },
   methods: {
-    changeFoods(index){
-      this.selectedIndex=index
+    handleAddDom(buttonDom) {
+      this.buttonDom = buttonDom;
+    },
+    changeFoods(index) {
+      this.selectedIndex = index;
     },
     showIndex(index) {
       this.currentIndex = index;
@@ -40,7 +62,6 @@ export default {
       const data = res.data;
       if (data.errno == 0 && data.data) {
         this.goodsData = data.data;
-        console.log(this.goodsData);
       }
     }
   },
@@ -49,8 +70,8 @@ export default {
   },
   components: {
     GoodsMenu,
-    Foods
-    // ShopCar
+    Foods,
+    ShopCar
   }
 };
 </script>
@@ -63,5 +84,6 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
+  padding-bottom: 1rem;
 }
 </style>
